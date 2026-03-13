@@ -1,6 +1,6 @@
 from math import sqrt
-from numpy import full
 import pandas as pd
+import numpy as np
 
 # Reading both csv files into dataframes
 real = pd.read_csv("real_events.csv")
@@ -20,15 +20,33 @@ fullData = pd.concat([virt, newReal], ignore_index=True)
 # All cases of negative weight
 negWeights = fullData[fullData['weight'] < 0]
 
-# Adding a column to track whether a neighbor has already been used in a cell
+# Adding a column to track whether a neighbor has already been used in a cell for each negative weight loop
 fullData['used'] = False
+
+# Adding a column to track the negative weight event's distance to all other events
+fullData['distance'] = 0.0
 
 # Iterating over every case of negative weight
 for i, row in negWeights.iterrows():
-    w = row['weight']
+    if row['weight'] < 0:
 
-# Function for calculating distance to neighbors
-def dist(pti, ptj, yi, yj):
-    d = sqrt((pti - ptj)**2 + 100*(yi - yj)**2)
-    return d
-print(fullData)
+        # Setting pt and y values of each negative event for distance calculation
+        ptNeg = row['pt']
+        yNeg = row['y']
+        cellWeight = row['weight'] # Cell weight prior to adding anything to it
+        used_events = [i] # Indices of events that are being added to the current cell
+
+        fullData['distance'] = np.sqrt((fullData['pt'] - ptNeg)**2 + 100*(fullData['y'] - yNeg)**2) # Calculating distances to all other events
+        sortedDistIndices = fullData['distance'].sort_values().index # Sorting the distances from shortest to largest
+        
+        for j in sortedDistIndices:
+            # Checking to see if event has already been used in different cell
+            if not fullData.at[j, 'used']: 
+                cellWeight += fullData.at[j, 'weight'] # Adding weight of next nearest event to cell
+                fullData.at[j, 'used'] = True # Marking event as used in a cell
+                used_events.append(j) # Adding event to current cell
+
+                if cellWeight > 0:
+                    break # Getting out of the for loop when cell weight is positive
+            
+        
