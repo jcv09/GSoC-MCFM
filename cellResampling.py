@@ -34,6 +34,7 @@ for i, row in negWeights.iterrows():
         ptNeg = row['pt']
         yNeg = row['y']
         cellWeight = row['weight'] # Cell weight prior to adding anything to it
+        fullData.at[i, 'used'] = True # Setting current negative event to used so it's not counted in the following loop
         used_events = [i] # Indices of events that are being added to the current cell
 
         fullData['distance'] = np.sqrt((fullData['pt'] - ptNeg)**2 + 100*(fullData['y'] - yNeg)**2) # Calculating distances to all other events
