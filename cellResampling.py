@@ -1,4 +1,3 @@
-import math
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -28,6 +27,12 @@ fullData['redisWeight'] = fullData['weight'] # Adding a column to store redistri
 
 # Iterating over every case of negative weight
 for i, row in negWeights.iterrows():
+
+    # Checking if current negative weight event has already been included in a different cell, previous version double counted
+    if fullData.at[i, 'used']:
+        continue
+    
+    # Looping through negative weight events
     if row['weight'] < 0:
 
         # Setting pt and y values of each negative event for distance calculation
