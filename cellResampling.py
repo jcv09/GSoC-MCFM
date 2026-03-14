@@ -60,6 +60,8 @@ for i, row in negWeights.iterrows():
     for k in usedEvents:
         fullData.at[k, 'redisWeight'] = (abs(fullData.at[k, 'weight'])/sumOfAbsWeights)*sumOfWeights
 
+print(fullData['weight'].sum() - fullData['redisWeight'].sum())
+
 # Plotting pt values
 # Before redistribution
 plt.hist(fullData['pt'], bins=50, weights=fullData['weight'], label='Before redistribution', color='blue', alpha=0.6)
@@ -77,8 +79,3 @@ plt.hist(fullData['y'], bins=50, weights=fullData['redisWeight'], label='After r
 plt.xlabel('y')
 plt.legend()
 plt.show()
-
-modified = fullData[fullData['used'] == True]
-not_modified = fullData[fullData['used'] == False]
-print(f"Sum of modified: {modified['redisWeight'].sum()}")
-print(f"Sum of original for modified: {modified['weight'].sum()}")
