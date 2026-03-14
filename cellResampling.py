@@ -1,6 +1,7 @@
 from math import sqrt
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Reading both csv files into dataframes
 real = pd.read_csv("real_events.csv")
@@ -17,14 +18,13 @@ newReal = real[['pt', 'y', 'weight']]
 virt = virt[['pt', 'y', 'weight']]
 fullData = pd.concat([virt, newReal], ignore_index=True)
 
-# All cases of negative weight
-negWeights = fullData[fullData['weight'] < 0]
+negWeights = fullData[fullData['weight'] < 0] # All cases of negative weight
 
-# Adding a column to track whether a neighbor has already been used in a cell for each negative weight loop
-fullData['used'] = False
+fullData['used'] = False # Adding a column to track whether a neighbor has already been used in a cell for each negative weight loop
 
-# Adding a column to track the negative weight event's distance to all other events
-fullData['distance'] = 0.0
+fullData['distance'] = 0.0 # Adding a column to track the negative weight event's distance to all other events
+
+fullData['redisWeight'] = 0.0 # Adding a column to store redistributed weights
 
 # Iterating over every case of negative weight
 for i, row in negWeights.iterrows():
@@ -35,19 +35,30 @@ for i, row in negWeights.iterrows():
         yNeg = row['y']
         cellWeight = row['weight'] # Cell weight prior to adding anything to it
         fullData.at[i, 'used'] = True # Setting current negative event to used so it's not counted in the following loop
-        used_events = [i] # Indices of events that are being added to the current cell
+        usedEvents = [i] # Indices of events that are being added to the current cell
 
         fullData['distance'] = np.sqrt((fullData['pt'] - ptNeg)**2 + 100*(fullData['y'] - yNeg)**2) # Calculating distances to all other events
-        sortedDistIndices = fullData['distance'].sort_values().index # Sorting the distances from shortest to largest
+        sortedDistIndices = fullData['distance'].sort_values().index # Sorting the distances from shortest to largest and storing indices
         
         for j in sortedDistIndices:
             # Checking to see if event has already been used in different cell
             if not fullData.at[j, 'used']: 
                 cellWeight += fullData.at[j, 'weight'] # Adding weight of next nearest event to cell
                 fullData.at[j, 'used'] = True # Marking event as used in a cell
-                used_events.append(j) # Adding event to current cell
+                usedEvents.append(j) # Adding event to current cell
 
                 if cellWeight > 0:
                     break # Getting out of the for loop when cell weight is positive
-            
-        
+    
+    print(usedEvents)
+
+
+plt.hist(fullData['pt'], bins=30, color='blue', edgecolor='black')
+plt.xlabel('pt')
+plt.title('before cell resampling')
+plt.show()
+
+plt.hist(fullData['y'], bins=30, color='green', edgecolor='black')
+plt.xlabel('y')
+plt.title('before cell resampling')
+plt.show()
