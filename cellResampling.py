@@ -1,4 +1,4 @@
-from math import sqrt
+import math
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,7 +24,7 @@ fullData['used'] = False # Adding a column to track whether a neighbor has alrea
 
 fullData['distance'] = 0.0 # Adding a column to track the negative weight event's distance to all other events
 
-fullData['redisWeight'] = 0.0 # Adding a column to store redistributed weights
+fullData['redisWeight'] = fullData['weight'] # Adding a column to store redistributed weights, ainitialized at real weights
 
 # Iterating over every case of negative weight
 for i, row in negWeights.iterrows():
@@ -45,20 +45,40 @@ for i, row in negWeights.iterrows():
             if not fullData.at[j, 'used']: 
                 cellWeight += fullData.at[j, 'weight'] # Adding weight of next nearest event to cell
                 fullData.at[j, 'used'] = True # Marking event as used in a cell
-                usedEvents.append(j) # Adding event to current cell
+                usedEvents.append(j) # Adding index of curent event to list of used events for current cell
 
                 if cellWeight > 0:
                     break # Getting out of the for loop when cell weight is positive
     
-    print(usedEvents)
+    # Sum of weights
+    sumOfWeights = fullData.loc[usedEvents, 'weight'].sum() 
+    
+    # Sum of absolute values for weights
+    sumOfAbsWeights = fullData.loc[usedEvents, 'weight'].abs().sum()
 
+    # Applying weight redistribution formula to weights of all events in current cell
+    for k in usedEvents:
+        fullData.at[k, 'redisWeight'] = (abs(fullData.at[k, 'weight'])/sumOfAbsWeights)*sumOfWeights
 
-plt.hist(fullData['pt'], bins=30, color='blue', edgecolor='black')
+# Plotting pt values
+# Before redistribution
+plt.hist(fullData['pt'], bins=50, weights=fullData['weight'], label='Before redistribution', color='blue', alpha=0.6)
+# After
+plt.hist(fullData['pt'], bins=50, weights=fullData['redisWeight'], label='After redistribution', color='red')
 plt.xlabel('pt')
-plt.title('before cell resampling')
+plt.legend()
 plt.show()
 
-plt.hist(fullData['y'], bins=30, color='green', edgecolor='black')
+# Plotting y values
+# Before redistribution
+plt.hist(fullData['y'], bins=50, weights=fullData['weight'], label='Before redistribution', color='blue', alpha=0.6)
+# After
+plt.hist(fullData['y'], bins=50, weights=fullData['redisWeight'], label='After redistribution', color='red')
 plt.xlabel('y')
-plt.title('before cell resampling')
+plt.legend()
 plt.show()
+
+modified = fullData[fullData['used'] == True]
+not_modified = fullData[fullData['used'] == False]
+print(f"Sum of modified: {modified['redisWeight'].sum()}")
+print(f"Sum of original for modified: {modified['weight'].sum()}")
