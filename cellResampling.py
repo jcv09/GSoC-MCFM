@@ -67,18 +67,20 @@ for i, row in negWeights.iterrows():
 
 # Plotting pt values
 # Before redistribution
-plt.hist(fullData['pt'], bins=50, weights=fullData['weight'], label='Before redistribution', color='blue', alpha = 0.4)
+plt.hist(fullData['pt'], bins=50, weights=fullData['weight'], label='Before', color='blue', alpha = 0.4)
 # After
-plt.hist(fullData['pt'], bins=50, weights=fullData['redisWeight'], label='After redistribution', color='red', alpha = 0.4)
+plt.hist(fullData['pt'], bins=50, weights=fullData['redisWeight'], label='After', color='red', alpha = 0.4)
 plt.xlabel('pt')
 plt.legend()
+plt.savefig('ptHistogram')
 plt.show()
 
 # Plotting y values
 # Before redistribution
-plt.hist(fullData['y'], bins=50, weights=fullData['weight'], label='Before redistribution', color='blue', alpha = 0.4)
+plt.hist(fullData['y'], bins=50, weights=fullData['weight'], label='Before', color='blue', alpha = 0.4)
 # After
-plt.hist(fullData['y'], bins=50, weights=fullData['redisWeight'], label='After redistribution', color='red', alpha = 0.4)
+plt.hist(fullData['y'], bins=50, weights=fullData['redisWeight'], label='After', color='red', alpha = 0.4)
 plt.xlabel('y')
 plt.legend()
+plt.savefig('yHistogram')
 plt.show()
