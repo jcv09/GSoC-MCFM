@@ -21,7 +21,7 @@ This is my implementation of the Cell Resampling Method. Overall structure of th
 5. Using the original and new (all positive) weights to generate the two required histograms
 
 ### Computational Complexity
-I have limited experience programming, so my best attempt at determining the computational complexity of the code is $O(N^2logN)$, based on a $for$ ($O(N)$) loop containing another $for$ loop with a sorting algorithm ($O(NlogN)$) in it.
+I have limited experience programming, so my best attempt at determining the computational complexity of the code is $O(N^2logN)$, based on a $for$ ( $O(N)$ ) loop containing another $for$ loop with a sorting algorithm ( $O(NlogN)$ ) in it.
 
 ### Discussion Question
 Looking at $\rho_T$ and $y$ in the data, it's easy to see $\rho_T$ is in general 1 to 2 orders of magnitude larger than $y$. Calculating distance without a scaling factor would mean the larger $\rho_T$ would dominate the metric, distance would just mean the closest $\rho_T$ value. I consider the following to be a fair estimate:
