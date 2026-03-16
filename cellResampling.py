@@ -42,7 +42,7 @@ for i, row in negWeights.iterrows():
         fullData.at[i, 'used'] = True # Setting current negative event to used so it's not counted in the following loop
         usedEvents = [i] # Indices of events that are being added to the current cell
 
-        fullData['distance'] = np.sqrt((fullData['pt'] - ptNeg)**2 + 100*(fullData['y'] - yNeg)**2) # Calculating distances to all other events
+        fullData['distance'] = np.sqrt((fullData['pt'] - ptNeg)**2 + 736.736*(fullData['y'] - yNeg)**2) # Calculating distances to all other events
         sortedDistIndices = fullData['distance'].sort_values().index # Sorting the distances from shortest to largest and storing indices
         
         for j in sortedDistIndices:
@@ -67,20 +67,23 @@ for i, row in negWeights.iterrows():
 
 # Plotting pt values
 # Before redistribution
-plt.hist(fullData['pt'], bins=50, weights=fullData['weight'], label='Before', color='blue', alpha = 0.4)
+plt.hist(fullData['pt'], bins=100, weights=fullData['weight'], label='Before', color='blue', alpha = 0.4)
 # After
-plt.hist(fullData['pt'], bins=50, weights=fullData['redisWeight'], label='After', color='red', alpha = 0.4)
+plt.hist(fullData['pt'], bins=100, weights=fullData['redisWeight'], label='After', color='red', alpha = 0.4)
 plt.xlabel('pt')
 plt.legend()
 plt.savefig('ptHistogram')
-plt.show()
+# plt.show()
 
 # Plotting y values
 # Before redistribution
-plt.hist(fullData['y'], bins=50, weights=fullData['weight'], label='Before', color='blue', alpha = 0.4)
+plt.hist(fullData['y'], bins=100, weights=fullData['weight'], label='Before', color='blue', alpha = 0.4)
 # After
-plt.hist(fullData['y'], bins=50, weights=fullData['redisWeight'], label='After', color='red', alpha = 0.4)
+plt.hist(fullData['y'], bins=100, weights=fullData['redisWeight'], label='After', color='red', alpha = 0.4)
 plt.xlabel('y')
 plt.legend()
 plt.savefig('yHistogram')
-plt.show()
+# plt.show()
+
+# Scaling factor
+# print(((fullData['pt'].abs().sum())/(fullData['y'].abs().sum()))**2)

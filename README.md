@@ -2,10 +2,12 @@
 
 ### Results
 ![Histogram for $\rho_T$](ptHistogram.png) 
-Histogram for $\rho_T$
+
+Fig. 1: Histogram for $\rho_T$
 
 ![Histogram for $\rho_T$](yHistogram.png) 
-Histogram for $y$
+
+Fig. 2: Histogram for $y$
 
 ### Structure and Computational Complexity
 This is my implementation of the Cell Resampling Method. Overall structure of the code is as follows, with more comments in the script:
